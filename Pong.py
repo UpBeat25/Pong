@@ -16,6 +16,10 @@ dead = False
 
 WHITE = (255, 255, 255)
 
+ai = False
+
+screen_saver = False
+
 # player 1
 x1, y1 = 10, 300
 player1 = pygame.Rect(x1, y1, 10, 40)
@@ -39,12 +43,12 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-    font = pygame.font.Font(None, 150)
-    text = font.render(str(score1), True, WHITE)
-    window.blit(text, (250, 10))
-
-    text2 = font.render(str(score2), True, WHITE)
-    window.blit(text2, (700, 10))
+    if screen_saver is False:
+        font = pygame.font.Font(None, 150)
+        text = font.render(str(score1), True, WHITE)
+        window.blit(text, (250, 10))
+        text2 = font.render(str(score2), True, WHITE)
+        window.blit(text2, (700, 10))
 
     if f == 1:
         xb += a
@@ -52,6 +56,10 @@ while running:
     else:
         xb -= a
         yb -= b
+
+    if ai is True:
+        if xb >= 500:
+            y2 = yb
 
     player1 = pygame.Rect(x1, y1, 10, 40)
     player2 = pygame.Rect(x2, y2, 10, 40)
@@ -66,6 +74,17 @@ while running:
         y2 -= speed
     if userInput[pygame.K_DOWN] and y2 <= 560:
         y2 += speed
+
+    if userInput[pygame.K_o]:
+        ai = True
+    if userInput[pygame.K_p]:
+        ai = False
+
+    if userInput[pygame.K_HOME]:
+        screen_saver = True
+    if userInput[pygame.K_END]:
+        screen_saver = False
+        ai = False
 
     if yb <= 0 or yb >= 600:
         b *= -1
@@ -88,6 +107,12 @@ while running:
 
     if pygame.Rect.colliderect(ball, player1) or pygame.Rect.colliderect(ball, player2):
         a *= -1
+
+    if screen_saver is True:
+        if yb <= 500:
+            y1 = yb
+        if xb >= 500:
+            y2 = yb
 
     pygame.draw.rect(window, (255, 255, 255), player1)
     pygame.draw.rect(window, (255, 255, 255), player2)
